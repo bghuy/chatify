@@ -1,3 +1,4 @@
+'use client'
 // import { ModeToggle } from "@/components/mode-toggle";
 import { ModalProvider } from "@/components/providers/modal-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
@@ -64,8 +65,6 @@ const ProtectedLayout = ({children}:{children: React.ReactNode}) => {
                         </QueryProvider>
                     </SocketProvider>
                 </ThemeProvider>
-    
-                
             </div>
         );
     }else {
