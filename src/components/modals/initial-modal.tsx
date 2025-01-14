@@ -57,7 +57,7 @@ export const InitialModal = () =>{
                         className="space-y-8"
                     >
                         <div className="space-y-8 px-6">
-                            <div className="flex items-center justify-center text-center">
+                            <div className="flex items-center justify-center text-center cursor-pointer">
                                 <FormField 
                                     control={form.control}
                                     name="imageUrl"
@@ -98,7 +98,7 @@ export const InitialModal = () =>{
                             />
                         </div>
                         <DialogFooter className="bg-gray-100 px-6 py-4">
-                            <Button disabled={isLoading} variant="primary">
+                            <Button disabled={isLoading || !form.formState.isValid} variant="primary">
                                 Create
                             </Button>
                         </DialogFooter>
