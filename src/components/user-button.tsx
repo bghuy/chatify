@@ -34,7 +34,7 @@ export const UserButton = ({ user}: {user: UserType}) => {
             "relative flex mx-auto h-[48px] w-[48px] rounded-full overflow-hidden"
           )}
         >
-          <Image fill src={user.image as string} alt="Channel" />
+          <Image fill src={user?.image || ""} alt="Channel" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">

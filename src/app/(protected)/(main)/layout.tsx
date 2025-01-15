@@ -1,5 +1,5 @@
 
-// import { NavigationSidebar } from "@/components/navigation/navigation-sidebar";
+import { NavigationSidebar } from "@/components/navigation/navigation-sidebar";
 
 const MainLayout = async({
     children
@@ -9,10 +9,10 @@ const MainLayout = async({
     return (
         <div className="h-full flex">
             <div className="hidden md:flex h-full w-[72px] z-30 flex-col inset-y-0">
-                {/* <NavigationSidebar/> */}
+                <NavigationSidebar/>
             </div>
             <div className="h-full w-full">
-                {children}
+                {children}  
             </div>
         </div>
     );
