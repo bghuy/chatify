@@ -7,7 +7,15 @@ import { ScrollArea } from "../ui/scroll-area";
 import { NavigationItem } from "./navigation-item";
 import { ModeToggle } from "../mode-toggle";
 import { UserButton } from "../user-button";
+import { getUserProfile } from "@/services/auth";
 export const NavigationSidebar = async() =>{
+    const res = await getUserProfile();
+    const userProfile = res?.profile;
+    if (!userProfile) {
+        redirect(`/auth/login`);
+    }
+    // const serverRes = await getFirstServerByUserId(userProfile.id);
+    // const server = serverRes?.server;
     const user = await currentUser();
     if(!user) return redirect("/")
     

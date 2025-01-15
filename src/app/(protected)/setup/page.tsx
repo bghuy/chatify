@@ -1,25 +1,22 @@
 import { InitialModal } from "@/components/modals/initial-modal";
+import { getUserProfile } from "@/services/auth";
+import { getFirstServerByUserId } from "@/services/server";
+import { redirect } from "next/navigation";
 
-const SetUpPage = async() => {
-    // const session = await auth()
+const SetUpPage = async () => {
+    const res = await getUserProfile();
+    const userProfile = res?.profile;
+    if (!userProfile) {
+        redirect(`/auth/login`);
+    }
 
-    // const server = await db.server.findFirst({
-    //     where:{
-    //         members:{
-    //             some: {
-    //                 userId: session?.user.id
-    //             }
-    //         }
-    //     }
-    // })
+    const serverRes = await getFirstServerByUserId(userProfile.id);
+    const server = serverRes?.server;
+    if (server) {
+        redirect(`/servers/${server.id}`);
+    }
 
-    // if(server){
-    //     return redirect(`/servers/${server.id}`)
-    // }
+    return <InitialModal />;
+};
 
-    return (
-        <InitialModal/>
-    );
-}
- 
 export default SetUpPage;
