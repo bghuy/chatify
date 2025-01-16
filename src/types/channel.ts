@@ -6,14 +6,12 @@ export enum ChannelType {
     VIDEO
   }
 export type Channel = {
-    id: string
-    name: string
-    type: ChannelType
-    user: User
-    server: Server
-  
-    createdAt: Date
-    updatedAt: Date
-    
-    // messages Message[]
+  id: string;
+  name: string;
+  type: ChannelType;
+  user: User;
+  server: Server;
+  createdAt: Date;
+  updatedAt: Date;
+
 }

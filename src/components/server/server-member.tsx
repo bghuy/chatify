@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils";
-import { Member, MemberRole, Server, User } from "@prisma/client"
+import { Member, MemberRole,Server,User } from "@prisma/client"
 import { ShieldAlert, ShieldCheck } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { UserAvatar } from "../user-avatar";

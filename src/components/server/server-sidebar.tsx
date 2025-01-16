@@ -1,5 +1,5 @@
 
-import { MemberRole } from "@prisma/client";
+import { ChannelType, MemberRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { ServerHeader } from "./server-header";
 import { ScrollArea } from "../ui/scroll-area";
@@ -12,8 +12,7 @@ import { ServerMember } from "./server-member";
 import { signOut } from "@/actions/auth/signOut";
 import { getUserProfile } from "@/services/auth";
 import { getServerByServerId } from "@/services/server";
-import { Server } from "@/types/server";
-import { ChannelType } from "@/types/channel";
+import { ServerWithMembersWithUsersWithChannel } from "@/types/types";
 
 interface ServerSidebarProps {
     serverId: string
@@ -40,7 +39,7 @@ export const ServerSidebar = async({serverId}: ServerSidebarProps) =>{
         redirect("/auth/login");
     }
     const serverRes = await getServerByServerId(serverId);
-    const server = serverRes?.server as Server;
+    const server = serverRes?.server as ServerWithMembersWithUsersWithChannel;
 
 
     const textChannels = server?.channels.filter((channel)=> channel.type === ChannelType.TEXT)
