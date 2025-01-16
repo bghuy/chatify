@@ -1,5 +1,4 @@
 
-import { ChannelType, MemberRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { ServerHeader } from "./server-header";
 import { ScrollArea } from "../ui/scroll-area";
@@ -12,7 +11,9 @@ import { ServerMember } from "./server-member";
 import { signOut } from "@/actions/auth/signOut";
 import { getUserProfile } from "@/services/auth";
 import { getServerByServerId } from "@/services/server";
-import { ServerWithMembersWithUsersWithChannel } from "@/types/types";
+import { ServerWithMembersWithUsersWithChannel } from "@/types/user";
+import { ChannelType } from "@/types/channel";
+import { MemberRole } from "@/types/member";
 
 interface ServerSidebarProps {
     serverId: string

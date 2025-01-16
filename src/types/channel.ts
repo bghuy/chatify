@@ -1,17 +1,25 @@
-import { User } from "@auth/core/types"
-import {Server} from "./server"
-export enum ChannelType {
-    TEXT,
-    AUDIO,
-    VIDEO
-  }
+
+// export enum ChannelType {
+//   TEXT,
+//   AUDIO,
+//   VIDEO
+// }
+
+export const ChannelType = {
+  TEXT: 'TEXT',
+  AUDIO: 'AUDIO',
+  VIDEO: 'VIDEO'
+};
+
+export type ChannelType = (typeof ChannelType)[keyof typeof ChannelType]
+
+
 export type Channel = {
   id: string;
   name: string;
   type: ChannelType;
-  user: User;
-  server: Server;
+  userId: string;
+  serverId: string;
   createdAt: Date;
   updatedAt: Date;
-
 }
