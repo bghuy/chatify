@@ -1,13 +1,14 @@
-import { auth } from "@/auth";
+
+import { getUserProfile } from "@/services/auth";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 
 
 const f = createUploadthing();
 
 const handleAuth = async() =>{
-    const session = await auth();
-    const user = session?.user;
-    const userId = user?.id;
+    const res = await getUserProfile();
+    const userProfile = res?.profile;
+    const userId = userProfile?.id;
     if(!userId) throw new Error("Unauthorized")
     return {userId: userId};
 }
