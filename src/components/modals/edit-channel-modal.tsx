@@ -9,10 +9,11 @@ import { Button } from "../ui/button"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useModal } from "../../../hooks/use-modal-store"
-import { ChannelType } from "@prisma/client"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import qs from "query-string"
 import { useEffect } from "react"
+import { ChannelType } from "@/types/channel"
+
 
 const formSchema = z.object({
     name: z.string().min(1,{

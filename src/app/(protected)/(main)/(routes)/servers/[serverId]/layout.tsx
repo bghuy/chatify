@@ -1,8 +1,11 @@
-import { currentUser } from "@/lib/current-user";
-import { signOut } from "@/auth";
-import { db } from "@/lib/db";
-import { redirect } from "next/navigation";
+// import { currentUser } from "@/lib/current-user";
+// import { signOut } from "@/auth";
+// import { db } from "@/lib/db";
+import { signOutUser } from "@/actions/auth/signOut";
 import { ServerSidebar } from "@/components/server/server-sidebar";
+import { getUserProfile } from "@/services/auth";
+import { getFirstServerByUserId } from "@/services/server";
+import { redirect } from "next/navigation";
 const ServerIdLayout = async({
     children,
     params
@@ -12,20 +15,13 @@ const ServerIdLayout = async({
         serverId: string
     }
 }) =>{
-    const user = await currentUser();
-    if(!user){
-        await signOut();
+    const res = await getUserProfile();
+    const userProfile = res?.profile;
+    if (!userProfile) {
+        await signOutUser();
+        redirect("/auth/login");
     }
-    const server = await db.server.findUnique({
-        where: {
-            id: params.serverId,
-            members: {
-                some: {
-                    userId: user?.id
-                }
-            }
-        }
-    });
+    const server = await getFirstServerByUserId()
     if(!server){
         return redirect("/")
     }

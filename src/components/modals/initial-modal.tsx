@@ -14,7 +14,7 @@ const formSchema = z.object({
     name: z.string().min(1,{
         message: "Server name is required"
     }),
-    imageUrl: z.string().min(1,{
+    image: z.string().min(1,{
         message: "Server image is required"
     })
 })
@@ -25,13 +25,13 @@ export const InitialModal = () =>{
         resolver: zodResolver(formSchema),
         defaultValues:{
             name: "",
-            imageUrl: ""
+            image: ""
         }
     })
     const isLoading = form.formState.isSubmitting;
     const submitForm = async (values: z.infer<typeof formSchema>) =>{
         try {
-            const server = await axios.post("/api/servers",values)
+            const server = await axios.post("/servers",values)
             console.log(server);
             form.reset();
             router.refresh();
@@ -57,10 +57,10 @@ export const InitialModal = () =>{
                         className="space-y-8"
                     >
                         <div className="space-y-8 px-6">
-                            <div className="flex items-center justify-center text-center">
+                            <div className="flex items-center justify-center text-center cursor-pointer">
                                 <FormField 
                                     control={form.control}
-                                    name="imageUrl"
+                                    name="image"
                                     render={({field})=>(
                                         <FormItem>
                                             <FormControl>
@@ -98,7 +98,7 @@ export const InitialModal = () =>{
                             />
                         </div>
                         <DialogFooter className="bg-gray-100 px-6 py-4">
-                            <Button disabled={isLoading} variant="primary">
+                            <Button disabled={isLoading || !form.formState.isValid} variant="primary">
                                 Create
                             </Button>
                         </DialogFooter>

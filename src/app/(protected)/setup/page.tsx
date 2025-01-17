@@ -1,42 +1,24 @@
-
-import { auth } from "@/auth";
+import { signOutUser } from "@/actions/auth/signOut";
 import { InitialModal } from "@/components/modals/initial-modal";
-import { db } from "@/lib/db";
+import { getUserProfile } from "@/services/auth";
+import { getFirstServerByUserId } from "@/services/server";
 import { redirect } from "next/navigation";
-const ChannelsPage = async() => {
-    const session = await auth()
 
-    const server = await db.server.findFirst({
-        where:{
-            members:{
-                some: {
-                    userId: session?.user.id
-                }
-            }
-        }
-    })
-
-    if(server){
-        return redirect(`/servers/${server.id}`)
+const SetUpPage = async () => {
+    const res = await getUserProfile();
+    const userProfile = res?.profile;
+    if (!userProfile) {
+        await signOutUser();
+        redirect("/auth/login");
     }
 
-    return (
-        <InitialModal/>
-        // <div>
-        //     <p>Create a Server</p>
-        //     {JSON.stringify(session)}
-        //     <form action={
-        //         async ()=>{
-        //             "use server";
-        //             await signOut();
-        //         }
-        //     }>
-        //         <button type="submit">
-        //             Sign out
-        //         </button>
-        //     </form>
-        // </div>
-    );
-}
- 
-export default ChannelsPage;
+    const serverRes = await getFirstServerByUserId();
+    const server = serverRes?.server;
+    if (server) {
+        redirect(`/servers/${server.id}`);
+    }
+
+    return <InitialModal />;
+};
+
+export default SetUpPage;

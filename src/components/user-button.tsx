@@ -5,8 +5,8 @@ import Image from "next/image";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger, } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import {UserRole } from "@prisma/client";
-import { logOut } from "../../actions/logout";
 import { useRouter } from "next/navigation";
+import { signOutUser } from "@/actions/auth/signOut";
 
 
 interface UserType {
@@ -23,7 +23,7 @@ interface UserType {
 export const UserButton = ({ user}: {user: UserType}) => {
   const router = useRouter(); 
   const signOut = async () => {
-    await logOut();
+    await signOutUser();
     router.push("/auth/login")
   };
   return (
@@ -34,7 +34,19 @@ export const UserButton = ({ user}: {user: UserType}) => {
             "relative flex mx-auto h-[48px] w-[48px] rounded-full overflow-hidden"
           )}
         >
-          <Image fill src={user.image as string} alt="Channel" />
+          {
+            user?.image ? (
+              <Image
+                fill
+                src={user?.image || ""}
+                alt="Channel"
+              />
+            ) : (
+              <div className="h-full w-full flex items-center justify-center bg-slate-50 text-black">
+                {user.name?.charAt(0).toUpperCase()}
+              </div>
+            )
+          }
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">

@@ -23,4 +23,16 @@ export const LoginByCredentials = async (email: string, password: string) => {
       throw error;
     }
 };
+
+export const getUserProfile = async () => {
+    try {
+        const response = await axios.get("/auth/profile");
+        return response.data;
+    } catch (error) {
+        return null;
+        
+        // throw error;
+    }
+};
+
   

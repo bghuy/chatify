@@ -1,6 +1,4 @@
-import { currentUser } from "@/lib/current-user"
-import { db } from "@/lib/db";
-import { ChannelType, MemberRole } from "@prisma/client";
+
 import { redirect } from "next/navigation";
 import { ServerHeader } from "./server-header";
 import { ScrollArea } from "../ui/scroll-area";
@@ -10,6 +8,12 @@ import { Separator } from "../ui/separator";
 import { ServerSection } from "./server-section";
 import { ServerChannel } from "./server-channel";
 import { ServerMember } from "./server-member";
+import { signOutUser } from "@/actions/auth/signOut";
+import { getUserProfile } from "@/services/auth";
+import { getServerByServerId } from "@/services/server";
+import { ServerWithMembersWithUsersWithChannel } from "@/types/user";
+import { ChannelType } from "@/types/channel";
+import { MemberRole } from "@/types/member";
 
 interface ServerSidebarProps {
     serverId: string
@@ -28,31 +32,16 @@ const roleIconMap = {
 }
 
 export const ServerSidebar = async({serverId}: ServerSidebarProps) =>{
-
-    const user = await currentUser();
-    if(!user) {
-        return redirect("/");
+    
+    const res = await getUserProfile();
+    const user = res?.profile;
+    if (!user) {
+        await signOutUser();
+        redirect("/auth/login");
     }
-    const server = await db.server.findUnique({
-        where: {
-            id: serverId
-        },
-        include: {
-            channels: {
-                orderBy: {
-                    createdAt: "asc"
-                }
-            },
-            members: {
-                include: {
-                    user: true
-                },
-                orderBy: {
-                    role: "asc"
-                }
-            }
-        }
-    })
+    const serverRes = await getServerByServerId(serverId);
+    const server = serverRes?.server as ServerWithMembersWithUsersWithChannel;
+
 
     const textChannels = server?.channels.filter((channel)=> channel.type === ChannelType.TEXT)
     const audioChannels = server?.channels.filter((channel)=> channel.type === ChannelType.AUDIO)

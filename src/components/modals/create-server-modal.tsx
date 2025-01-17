@@ -7,9 +7,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { FileUpload } from "../file-upload"
-import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useModal } from "../../../hooks/use-modal-store"
+import { createNewServer } from "@/services/server"
 
 const formSchema = z.object({
     name: z.string().min(1,{
@@ -36,8 +36,8 @@ export const CreateServerModal = () =>{
     const isLoading = form.formState.isSubmitting;
     const submitForm = async (values: z.infer<typeof formSchema>) =>{
         try {
-            const server = await axios.post("/api/servers",values)
-            console.log(server);
+            const res = await createNewServer({name: values.name, image: values.imageUrl});
+            console.log(res?.server);
             router.refresh();
             handleClose()
             // window.location.reload();
