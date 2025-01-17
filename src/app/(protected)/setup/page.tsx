@@ -1,4 +1,4 @@
-import { signOut } from "@/actions/auth/signOut";
+import { signOutUser } from "@/actions/auth/signOut";
 import { InitialModal } from "@/components/modals/initial-modal";
 import { getUserProfile } from "@/services/auth";
 import { getFirstServerByUserId } from "@/services/server";
@@ -8,7 +8,7 @@ const SetUpPage = async () => {
     const res = await getUserProfile();
     const userProfile = res?.profile;
     if (!userProfile) {
-        await signOut();
+        await signOutUser();
         redirect("/auth/login");
     }
 

@@ -8,7 +8,7 @@ import { Separator } from "../ui/separator";
 import { ServerSection } from "./server-section";
 import { ServerChannel } from "./server-channel";
 import { ServerMember } from "./server-member";
-import { signOut } from "@/actions/auth/signOut";
+import { signOutUser } from "@/actions/auth/signOut";
 import { getUserProfile } from "@/services/auth";
 import { getServerByServerId } from "@/services/server";
 import { ServerWithMembersWithUsersWithChannel } from "@/types/user";
@@ -36,7 +36,7 @@ export const ServerSidebar = async({serverId}: ServerSidebarProps) =>{
     const res = await getUserProfile();
     const user = res?.profile;
     if (!user) {
-        await signOut();
+        await signOutUser();
         redirect("/auth/login");
     }
     const serverRes = await getServerByServerId(serverId);

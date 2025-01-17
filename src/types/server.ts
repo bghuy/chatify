@@ -8,3 +8,8 @@ export type Server = {
     updatedAt: Date;
 }
 
+export type CreateServerType = {
+    name: string;
+    image: string;
+}
+

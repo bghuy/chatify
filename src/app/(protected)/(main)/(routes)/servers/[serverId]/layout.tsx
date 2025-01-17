@@ -1,7 +1,7 @@
 // import { currentUser } from "@/lib/current-user";
 // import { signOut } from "@/auth";
 // import { db } from "@/lib/db";
-import { signOut } from "@/actions/auth/signOut";
+import { signOutUser } from "@/actions/auth/signOut";
 import { ServerSidebar } from "@/components/server/server-sidebar";
 import { getUserProfile } from "@/services/auth";
 import { getFirstServerByUserId } from "@/services/server";
@@ -18,7 +18,7 @@ const ServerIdLayout = async({
     const res = await getUserProfile();
     const userProfile = res?.profile;
     if (!userProfile) {
-        await signOut();
+        await signOutUser();
         redirect("/auth/login");
     }
     const server = await getFirstServerByUserId()

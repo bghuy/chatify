@@ -29,7 +29,8 @@ export const getUserProfile = async () => {
         const response = await axios.get("/auth/profile");
         return response.data;
     } catch (error) {
-        console.log(error,"error");
+        return null;
+        
         // throw error;
     }
 };

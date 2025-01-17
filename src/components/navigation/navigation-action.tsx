@@ -5,11 +5,12 @@ import { ActionTooltip } from "../action-tooltip"
 import { useModal } from "../../../hooks/use-modal-store"
 
 export const NavigationAction = ()=>{
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {onOpen ,isOpen , type} = useModal();
     const handleOpen = ()=>{
         onOpen("CreateServer");
-        console.log(isOpen, "isOpen");
-        console.log(type, "type");       
+        // console.log(isOpen, "isOpen");
+        // console.log(type, "type");       
     }
     return(
         <div>
