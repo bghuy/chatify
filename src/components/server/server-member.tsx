@@ -25,7 +25,7 @@ export const ServerMember = ({
     const params = useParams();
     const router = useRouter();
     const icon = roleIconMap[member.role];
-
+    
     const handleClick = () =>{
         router.push(`/servers/${params?.serverId}/conversations/${member.id}`)
     }
@@ -37,10 +37,25 @@ export const ServerMember = ({
                 params?.memberId === member.id && "bg-zinc-700/20 dark:bg-zinc-700"
             )}
         >
-            <UserAvatar 
-                src={member.user.image as string}
-                className="h-8 w-8 md:h-8 md:w-8"
-            />
+            {
+                member?.user?.image 
+                ?
+                <UserAvatar 
+                    src={member.user.image as string}
+                    className="h-8 w-8 md:h-8 md:w-8"
+                />
+                :
+                <div
+                    className={cn(
+                        "relative flex h-[32px] w-[32px] rounded-full overflow-hidden"
+                    )}
+                >
+                    <div className="h-full w-full flex items-center justify-center bg-slate-50 text-black">
+                        {member?.user?.email?.charAt(0).toUpperCase()}
+                    </div>
+                </div>
+            }
+
             <p
                 className={cn(
                     "font-semibold text-sm text-zinc-500 group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300 transition",
@@ -48,7 +63,7 @@ export const ServerMember = ({
 
                 )}
             >
-                {member.user.name}
+                {member?.user?.name || member.user?.email}
             </p>
             {icon}
         </button>

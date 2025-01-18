@@ -55,3 +55,21 @@ export const updateServer = async (serverId: string, updateServerData: UpdateSer
         return null;
     }
 }
+
+export const generateNewInviteCode = async (serverId: string) => {
+    try {
+        const res = await axiosInstance.patch(`/server/${serverId}/invite-code`)
+        return res.data
+    } catch (error) {
+        return null;
+    }
+}
+
+export const joinServer = async (inviteCode: string) => {
+    try {
+        const res = await axiosInstance.patch(`/server/join-server`, { inviteCode })
+        return res.data
+    } catch (error) {
+        return null;
+    }
+}
