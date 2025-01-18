@@ -7,16 +7,16 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { FileUpload } from "../file-upload"
-import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useModal } from "../../../hooks/use-modal-store"
 import { useEffect } from "react"
+import { updateServer } from "@/services/server"
 
 const formSchema = z.object({
     name: z.string().min(1,{
         message: "Server name is required"
     }),
-    imageUrl: z.string().min(1,{
+    image: z.string().min(1,{
         message: "Server image is required"
     })
 })
@@ -32,7 +32,7 @@ export const EditServerModal = () =>{
         resolver: zodResolver(formSchema),
         defaultValues:{
             name: "",
-            imageUrl: ""
+            image: ""
         }
     })
 
@@ -40,17 +40,18 @@ export const EditServerModal = () =>{
         if (data?.server) {
             const { name, image } = data.server;
             form.setValue("name", name || "");
-            form.setValue("imageUrl", image || "");
+            form.setValue("image", image || "");
         }
     }, [data, form])
     const isLoading = form.formState.isSubmitting;
     const submitForm = async (values: z.infer<typeof formSchema>) =>{
         try {
-            const server = await axios.patch(`/api/servers/${data?.server?.id}`,values)
-            console.log(server);
-            router.refresh();
-            handleClose()
-            // window.location.reload();
+            if(data?.server?.id){
+                const server = await updateServer(data.server.id, values)
+                console.log(server);
+                router.refresh();
+                handleClose()
+            }
         } catch (error) {
             console.log(error)
         }
@@ -81,7 +82,7 @@ export const EditServerModal = () =>{
                             <div className="flex items-center justify-center text-center">
                                 <FormField 
                                     control={form.control}
-                                    name="imageUrl"
+                                    name="image"
                                     render={({field})=>(
                                         <FormItem>
                                             <FormControl>

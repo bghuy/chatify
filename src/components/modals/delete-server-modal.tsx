@@ -4,8 +4,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useModal } from "../../../hooks/use-modal-store"
 import { Button } from "../ui/button";
 import { useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
+import { deleteServer } from "@/services/server";
 
 export const DeleteServerModal = () =>{
     const {isOpen, onClose , type, data} = useModal();
@@ -16,11 +16,14 @@ export const DeleteServerModal = () =>{
     const handleClick = async ()=>{
         try {
             setIsLoading(true);
-            const response = await axios.delete(`/api/servers/${server?.id}`);
-            console.log(response,"response");
-            router.refresh();
-            onClose();
-            router.push("/")
+            if(server?.id){
+                const response = await deleteServer(server.id);
+                console.log(response,"response");
+                router.refresh();
+                onClose();
+                router.push("/setup")
+            }
+
         } catch (error) {
             console.log(error);
             
