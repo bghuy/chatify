@@ -13,3 +13,8 @@ export type CreateServerType = {
     image: string;
 }
 
+export type UpdateServerType = {
+    name: string;
+    image: string;
+}
+

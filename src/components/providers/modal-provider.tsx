@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { CreateChannelModal } from "../modals/create-channel-modal"
 // import { useEffect, useState } from "react"
 import { CreateServerModal } from "../modals/create-server-modal"
@@ -14,16 +15,16 @@ import { MembersModal } from "../modals/members-modal"
 import { MessageFileModal } from "../modals/message-file-modal"
 
 export const ModalProvider = () =>{
-    // const [isMounted, setIsMounted] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
 
-    // useEffect(()=>{
-    //     setIsMounted(true);
-    // },[])
+    useEffect(()=>{
+        setIsMounted(true);
+    },[])
 
-    // if(!isMounted) {
-    //     console.log("null");
-    //     return null
-    // }
+    if(!isMounted) {
+        console.log("null");
+        return null
+    }
     
     return(
         <>
