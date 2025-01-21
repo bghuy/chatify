@@ -1,5 +1,6 @@
-import { currentUser } from "@/lib/current-user";
-import { db } from "@/lib/db";
+import { signOutUser } from "@/actions/auth/signOut";
+import { getUserProfile } from "@/services/auth";
+import { joinServer } from "@/services/server";
 import { redirect } from "next/navigation";
 
 interface InviteCodePageProps {
@@ -10,40 +11,22 @@ interface InviteCodePageProps {
 const InviteCodePage = async({
     params
 }:InviteCodePageProps) => {
-    const user = await currentUser();
-
-    if(!user) return redirect("/auth/login");
+    const res = await getUserProfile();
+    const userProfile = res?.profile;
+    if (!userProfile) {
+        await signOutUser();
+        redirect("/auth/login");
+    }
 
     if(!params.inviteCode) return redirect("/")
-
-    const existingServer = await db.server.findFirst({
-        where: {
-            inviteCode: params.inviteCode,
-            members: {
-                some: {
-                    userId: user.id
-                }
-            }
-        }
-    })
-
-    if(existingServer) return redirect(`/servers/${existingServer.id}`);
-    const server = await db.server.update({
-        where: {
-            inviteCode: params.inviteCode,
-        },
-        data: {
-            members: {
-                create: [
-                    {
-                        userId: user.id
-                    }
-                ]
-            }
-        }
-    })
+    const resServer = await joinServer(params.inviteCode);
+    if(!resServer) {
+        return redirect(`/`);
+    }
+    console.log(resServer,"resServer");
+    
+    const server = resServer?.server;
     if(server) return redirect(`/servers/${server.id}`);
-
     return null
 }
  
