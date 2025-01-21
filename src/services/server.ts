@@ -89,3 +89,18 @@ export const updateMemberRole = async (serverId: string, memberId: string, role:
         throw error
     }
 }
+
+export const deleteMemberInServer = async (serverId: string, memberId: string) => {
+    try {
+        const url = qs.stringifyUrl({
+            url: `/member/${memberId}`,
+            query: {
+                serverId: serverId,
+            }
+        })
+        const res = await axiosInstance.delete(url);
+        return res.data
+    } catch (error) {
+        throw error
+    }
+}

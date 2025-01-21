@@ -8,12 +8,10 @@ import { UserAvatar } from "../user-avatar";
 import { Check, Gavel, Loader2, MoreVertical, Shield, ShieldAlert, ShieldCheck, ShieldQuestion } from "lucide-react";
 import { useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import qs from "query-string"
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { MemberRole } from "@/types/member";
 import { cn } from "@/lib/utils";
-import { updateMemberRole } from "@/services/server";
+import { deleteMemberInServer, updateMemberRole } from "@/services/server";
 
 const roleIconMap = {
     "GUEST": null,
@@ -31,15 +29,15 @@ export const MembersModal = () =>{
     const onKick = async(memberId: string)=>{
         try {
             setLoadingId(memberId);
-            const url = qs.stringifyUrl({
-                url: `/api/members/${memberId}`,
-                query: {
-                    serverId: server?.id,
-                }
-            })
-            const response = await axios.delete(url);
+            // const url = qs.stringifyUrl({
+            //     url: `/api/members/${memberId}`,
+            //     query: {
+            //         serverId: server?.id,
+            //     }
+            // })
+            const response = await deleteMemberInServer(server?.id, memberId);
             router.refresh();
-            onOpen("members",{server: response.data});
+            onOpen("members",{server: response?.server});
         } catch (error) {
             console.log(error);
         } finally {
