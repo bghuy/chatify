@@ -12,10 +12,12 @@ import qs from "query-string"
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { MemberRole } from "@/types/member";
+import { cn } from "@/lib/utils";
+import { updateMemberRole } from "@/services/server";
 
 const roleIconMap = {
     "GUEST": null,
-    "MODERATOR" : <ShieldCheck className="h-4 w-4 ml-2 text-indigo-500"/>,     
+    "MODERATOR" : <ShieldCheck className="h-4 w-4 text-indigo-500"/>,     
     "ADMIN": <ShieldAlert className="h-4 w-4 text-rose-500"/>
 }
 
@@ -48,16 +50,17 @@ export const MembersModal = () =>{
     const onRoleChange = async(memberId: string , role: MemberRole) =>{
         try {
             setLoadingId(memberId);
-            const url = qs.stringifyUrl({
-                url: `/api/members/${memberId}`,
-                query: {
-                    serverId: server?.id,
-                }
-            })
+            // const url = qs.stringifyUrl({
+            //     url: `/api/members/${memberId}`,
+            //     query: {
+            //         serverId: server?.id,
+            //     }
+            // })
 
-            const response = await axios.patch(url, {role});
+            // const response = await axios.patch(url, {role});
+            const response = await updateMemberRole(server?.id, memberId, role);
             router.refresh();
-            onOpen("members",{server: response.data});
+            onOpen("members",{server: response?.server});
         } catch (error) {
             console.log(error);
         } finally {
@@ -81,7 +84,24 @@ export const MembersModal = () =>{
                 <ScrollArea className="mt-8 max-h-[420px] pr-6">
                     {server?.members?.map((member) => (
                         <div key={member.id} className="flex items-center gap-x-2 mb-6">
-                            <UserAvatar src={member.user.image as string}/>
+                            {
+                                member?.user?.image 
+                                ?
+                                <UserAvatar 
+                                    src={member.user.image as string}
+                                    className="h-8 w-8 md:h-8 md:w-8"
+                                />
+                                :
+                                <div
+                                    className={cn(
+                                        "relative flex h-[32px] w-[32px] rounded-full overflow-hidden border-2"
+                                    )}
+                                >
+                                    <div className="h-full w-full flex items-center justify-center bg-slate-50 text-black">
+                                        {member?.user?.email?.charAt(0).toUpperCase()}
+                                    </div>
+                                </div>
+                            }
                             <div className="flex flex-col gap-y-1">
                                 <div className="text-xs font-semibold flex items-center gap-x-1">
                                     {member.user.name}
