@@ -41,12 +41,13 @@ export const ServerSidebar = async({serverId}: ServerSidebarProps) =>{
     }
     const serverRes = await getServerByServerId(serverId);
     const server = serverRes?.server as ServerWithMembersWithUsersWithChannel;
-
+    
 
     const textChannels = server?.channels.filter((channel)=> channel.type === ChannelType.TEXT)
     const audioChannels = server?.channels.filter((channel)=> channel.type === ChannelType.AUDIO)
     const videoChannels = server?.channels.filter((channel)=> channel.type === ChannelType.VIDEO)
     const members = server?.members.filter((member)=> member.userId !== user.id)
+    
     
     if(!server) return redirect("/")
 
