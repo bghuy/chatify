@@ -1,6 +1,6 @@
-// import { currentUser } from "@/lib/current-user";
-// import { db } from "@/lib/db";
-// import { redirect } from "next/navigation";
+
+import { getServerByServerId } from "@/services/server"
+import { redirect } from "next/navigation"
 
 interface ServerIdPageProps {
     params: {
@@ -8,45 +8,15 @@ interface ServerIdPageProps {
     }
 }
 const ServerIdPage = async({
-    // params
+    params
 }: ServerIdPageProps) => {
-    // const user = await currentUser();
-    // if(!user) {
-    //     return redirect('/auth/login')
-    // }
-
-    // const server = await db.server.findUnique({
-    //     where: {
-    //         id: params.serverId,
-    //         members: {
-    //             some: {
-    //                 userId: user.id
-    //             }
-    //         }
-    //     },
-    //     include: {
-    //         channels: {
-    //             where: {
-    //                 name: "general"
-    //             },
-    //             orderBy: {
-    //                 createdAt: "asc"
-    //             }
-    //         }
-    //     }
-    // })
-
-    // const initialChannel = server?.channels[0];
-    
-    // if(initialChannel?.name !== "general") {
-    //     return null;
-    // }
-    // return redirect(`/servers/${params.serverId}/channels/${initialChannel.id}`)
-    return (
-        <div>
-            ServerIdPage
-        </div>
-    )
+    const res = await getServerByServerId(params?.serverId, "general")
+    const server = res?.server
+    const initialChannel = server?.channels[0];
+    if(initialChannel?.name !== "general") {
+        return null;
+    }
+    return redirect(`/servers/${params.serverId}/channels/${initialChannel.id}`)
 }
  
 export default ServerIdPage;

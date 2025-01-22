@@ -1,9 +1,11 @@
+import { signOutUser } from "@/actions/auth/signOut";
 import { ChatHeader } from "@/components/chat/chat-header";
 import { ChatInput } from "@/components/chat/chat-input";
 import { ChatMessages } from "@/components/chat/chat-messages";
 import { MediaRoom } from "@/components/media-room";
-import { currentUser } from "@/lib/current-user";
-import { db } from "@/lib/db";
+import { getUserProfile } from "@/services/auth";
+import { getChannelByChannelId } from "@/services/channel";
+import { getMemberOfCurrentUserInServer } from "@/services/server";
 import { ChannelType } from "@prisma/client";
 import { redirect } from "next/navigation";
 
@@ -17,21 +19,19 @@ interface ChannelIdPageProps {
 const ChannelIdPage = async({
     params
 }: ChannelIdPageProps) => {
-    const user = await currentUser();
-    if(!user) return redirect("/auth.login")
+    const res = await getUserProfile();
+    const user = res?.profile;
+    if (!user) {
+        await signOutUser();
+        redirect("/auth/login");
+    }
     
-    const channel = await db.channel.findUnique({
-        where: {
-            id: params.channelId
-        }
-    })
-    const member = await db.member.findFirst({
-        where: {
-            serverId: params.serverId,
-            userId: user.id
-        }
-    });
-
+    const channelRes = await getChannelByChannelId(params.channelId);
+    const channel = channelRes?.channel;
+    
+    const memberRes = await getMemberOfCurrentUserInServer(params?.serverId);
+    const member = memberRes?.member;
+    
     if(!channel || !member) return redirect("/")
 
     return (
@@ -49,8 +49,8 @@ const ChannelIdPage = async({
                             name={channel.name}
                             chatId={channel.id}
                             type="channel"
-                            apiUrl="/api/messages"
-                            socketUrl="/api/socket/messages"
+                            apiUrl="/messages"
+                            socketUrl="/socket/messages"
                             socketQuery={{
                                 channelId: channel.id,
                                 serverId: channel.serverId
@@ -61,7 +61,7 @@ const ChannelIdPage = async({
                         <ChatInput
                             name={channel.name}
                             type="channel"
-                            apiUrl="/api/socket/messages"
+                            apiUrl="/socket/messages"
                             query={{
                                 channelId: channel.id,
                                 serverId: channel.serverId
