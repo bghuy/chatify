@@ -27,7 +27,8 @@ export const SocketProvider = ({
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
-        const socketInstance = ClientIO("http://localhost:8080", {  // No need for "new" keyword
+        const baseUrl = process.env.NEXT_PUBLIC_SERVER_MODE === 'production' ? process.env.NEXT_PUBLIC_SERVER_PRODUCTION_URL : process.env.NEXT_PUBLIC_SERVER_DEVELOPMENT_URL
+        const socketInstance = ClientIO(baseUrl, {  // No need for "new" keyword
             // path: "/api/socket/io",
             // addTrailingSlash: false
         });
