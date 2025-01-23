@@ -21,9 +21,27 @@ export const getAllServers = async() => {
     }
 }
 
-export const getServerByServerId = async (serverId: string) => {
+export const getMemberOfCurrentUserInServer = async (serverId: string) => {
     try {
-        const res = await axiosInstance.get(`/server/${serverId}`)
+        const url = qs.stringifyUrl({
+            url: `/server/${serverId}/member/me`,
+        })
+        const res = await axiosInstance.get(url)
+        return res.data
+    } catch (error) {
+        return null;
+    }
+}
+
+export const getServerByServerId = async (serverId: string, channelName?: string) => {
+    try {
+        const url = qs.stringifyUrl({
+            url: `/server/${serverId}`,
+            query: {
+                channelName: channelName,
+            }
+        })
+        const res = await axiosInstance.get(url)
         return res.data
     } catch (error) {
         return null;
