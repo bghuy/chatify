@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import ClientIO from "socket.io-client";  // Use default import
-
 type SocketContextType = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     socket: any | null;
@@ -28,16 +27,25 @@ export const SocketProvider = ({
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
-        const socketInstance = ClientIO(process.env.NEXT_PUBLIC_SITE_URL!, {  // No need for "new" keyword
-            path: "/api/socket/io",
+        const socketInstance = ClientIO("http://localhost:8080", {  // No need for "new" keyword
+            // path: "/api/socket/io",
             // addTrailingSlash: false
         });
+        // const socketInstance = io("http://localhost:8080", {
+        //     // path: "/api/socket/io",
+        //     // addTrailingSlash: false
+        // });
+        
 
         socketInstance.on("connect", () => {
+            console.log("Connected");
+            
             setIsConnected(true);
         });
 
         socketInstance.on("disconnect", () => {
+            console.log("Disconnected");
+            
             setIsConnected(false);
         });
 

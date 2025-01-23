@@ -56,7 +56,6 @@ export const useChatSocket = ({
         })
 
         socket.on(addKey,(message: MessageWithMemberWithUser)=>{
-            console.log(addKey, "addKey hook");
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             queryClient.setQueryData([queryKey],(oldData: any)=>{
                 if(!oldData || !oldData.pages || oldData.pages.length === 0){

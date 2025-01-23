@@ -22,7 +22,6 @@ export const ModalProvider = () =>{
     },[])
 
     if(!isMounted) {
-        console.log("null");
         return null
     }
     
