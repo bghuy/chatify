@@ -2,6 +2,7 @@ import qs from "query-string"
 import {useInfiniteQuery } from "@tanstack/react-query"
 
 import { useSocket } from "@/components/providers/socket-provider"
+import axiosInstance from "@/setup/axios";
 interface ChatQueryProps {
     queryKey: string;
     apiUrl: string;
@@ -25,8 +26,10 @@ export const useChatQuery = ({
                 [paramKey]: paramValue
             }
         }, {skipNull: true})
-        const response = await fetch(url);
-        return response.json();
+        const response = await axiosInstance.get(url);
+        console.log(response?.data, "dat");
+        
+        return response?.data;
     };
 
     const {
