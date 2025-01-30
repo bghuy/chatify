@@ -124,9 +124,24 @@ export const ChatItem = ({
                     onClick={onMemberClick}
                     className="cursor-pointer hover:drop-shadow-md transition"
                 >
-                    <UserAvatar 
-                        src={member.user.image as string}
-                    />
+                    {
+                        member?.user?.image 
+                        ?
+                        <UserAvatar 
+                            src={member.user.image as string}
+                            className="h-8 w-8 md:h-8 md:w-8"
+                        />
+                        :
+                        <div
+                            className={cn(
+                                "relative flex h-[32px] w-[32px] rounded-full overflow-hidden"
+                            )}
+                        >
+                            <div className="h-full w-full flex items-center justify-center bg-slate-50 text-black">
+                                {member?.user?.email?.charAt(0).toUpperCase()}
+                            </div>
+                        </div>
+                    }
                 </div>
                 <div className="flex flex-col w-full">
                     <div className="flex items-center gap-x-2">

@@ -65,7 +65,7 @@ const ChannelIdPage = async({
                             query={{
                                 channelId: channel.id,
                                 serverId: channel.serverId,
-                                userId: user.id
+                                member: member
                             }}
                         />
                     </>

@@ -50,7 +50,9 @@ export const ChatInput = ({
             // await axios.post(url, values)
             emitMessage({
                 content: values.content,
-                query: query
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                ...query
             })
             form.reset();
             router.refresh();

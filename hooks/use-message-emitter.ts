@@ -5,20 +5,21 @@ import Cookies from 'js-cookie';
 interface UseMessageEmitterProps {
   queryKey: string;
 }
-interface ChatQueryRequest {
-    content?: string;
-    fileUrl?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    query?: Record<string, any>;
-}
+// interface ChatQueryRequest {
+//     content?: string;
+//     fileUrl?: string;
+//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//     metadata?: Record<string, any>;
+// }
 
 export const useMessageEmitter = ({ queryKey }: UseMessageEmitterProps) => {
   const { socket } = useSocket();
   const getAccessToken = useCallback(() => {
     return Cookies.get('access_token');
   }, []);
-  const emitMessage = useCallback((messageData: ChatQueryRequest) => {
-    if(!messageData?.content && !messageData?.fileUrl && !messageData?.query) return;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const emitMessage = useCallback((messageData: any) => {
+    if(!messageData?.content && !messageData?.fileUrl && !messageData?.metadata) return;
     if (socket) {
       const access_token = getAccessToken();
         socket.emit(
