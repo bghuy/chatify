@@ -5,11 +5,12 @@ import * as z from "zod"
 import { Form, FormControl, FormField, FormItem } from "../ui/form";
 import { Plus } from "lucide-react";
 import { Input } from "../ui/input";
-import axios from "axios"
-import qs from "query-string"
+// import axios from "axios"
+// import qs from "query-string"
 import { useModal } from "../../../hooks/use-modal-store";
 import { EmojiPicker } from "../emoji-picker";
 import { useRouter } from "next/navigation";
+import { useMessageEmitter } from "../../../hooks/use-message-emitter";
 interface ChatInputProps {
     apiUrl: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,18 +37,25 @@ export const ChatInput = ({
             content: "",
         }
     })
+    const {emitMessage} = useMessageEmitter({
+        queryKey: 'new_message'
+    });
     const isLoading = form.formState.isSubmitting;
     const submitForm = async (values: z.infer<typeof formSchema>) =>{
         try {
-            const url = qs.stringifyUrl({
-                url: apiUrl,
-                query,
+            // const url = qs.stringifyUrl({
+            //     url: apiUrl,
+            //     query,
+            // })
+            // await axios.post(url, values)
+            emitMessage({
+                content: values.content,
+                query: query
             })
-            await axios.post(url, values)
             form.reset();
             router.refresh();
         } catch (error) {
-            
+            console.log(error);
         }
     }
     return(
