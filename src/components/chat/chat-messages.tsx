@@ -23,7 +23,8 @@ interface ChatMessagesProps {
     chatId: string;
     apiUrl: string;
     socketUrl: string;
-    socketQuery: Record<string,string>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    socketQuery: Record<string,any>;
     paramKey: "channelId" | "conversationId";
     paramValue: string;
     type: "channel" | "conversation"
