@@ -19,7 +19,22 @@ export const useMessageEmitter = ({ queryKey }: UseMessageEmitterProps) => {
   }, []);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const emitMessage = useCallback((messageData: any) => {
-    if(!messageData?.content && !messageData?.fileUrl && !messageData?.metadata) return;
+    if(!messageData?.content && !messageData?.fileUrl) return;
+    if (socket) {
+      const access_token = getAccessToken();
+        socket.emit(
+          queryKey, 
+          {
+            ...messageData,
+            access_token
+          }
+        );
+    }
+  }, [getAccessToken, queryKey, socket]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const emitUpdateMessage = useCallback((messageData: any) => {
+    if(!messageData?.deleted && !messageData?.content) return;
     if (socket) {
       const access_token = getAccessToken();
         socket.emit(
@@ -33,5 +48,6 @@ export const useMessageEmitter = ({ queryKey }: UseMessageEmitterProps) => {
   }, [getAccessToken, queryKey, socket]);
   return {
     emitMessage,
+    emitUpdateMessage
   };
 };

@@ -4,23 +4,33 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useModal } from "../../../hooks/use-modal-store"
 import { Button } from "../ui/button";
 import { useState } from "react";
-import axios from "axios";
-import qs from "query-string"
+import { useMessageEmitter } from "../../../hooks/use-message-emitter";
 
 export const DeleteMessageModal = () =>{
     const {isOpen, onClose , type, data} = useModal();
     const isModalOpen = isOpen === true && type === "DeleteMessage";
-    const {apiUrl, query} = data;
+    const {query, metadata} = data;
     const [isLoading, setIsLoading] = useState(false);
+    const {emitUpdateMessage} = useMessageEmitter({
+        queryKey: 'update_message'
+    });
     const handleClick = async ()=>{
         try {
-            setIsLoading(true);
-            const url = qs.stringifyUrl({
-                url: apiUrl || "",
-                query: query
+            // setIsLoading(true);
+            // const url = qs.stringifyUrl({
+            //     url: apiUrl || "",
+            //     query: query
+            // })
+            // await axios.delete(url);
+            emitUpdateMessage({
+                id: metadata?.id,
+                content: "This message has been deleted",
+                fileUrl: null,
+                createdAt: metadata?.createdAt,
+                updatedAt: metadata?.updatedAt,
+                deleted: true,
+                ...query
             })
-            await axios.delete(url);
-
             onClose();
         } catch (error) {
             console.log(error);
