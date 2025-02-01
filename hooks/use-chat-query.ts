@@ -27,7 +27,7 @@ export const useChatQuery = ({
             }
         }, {skipNull: true})
         const response = await axiosInstance.get(url);
-        console.log(response?.data, "dat");
+        console.log(response?.data,"response");
         
         return response?.data;
     };

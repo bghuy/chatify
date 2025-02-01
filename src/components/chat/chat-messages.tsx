@@ -23,7 +23,8 @@ interface ChatMessagesProps {
     chatId: string;
     apiUrl: string;
     socketUrl: string;
-    socketQuery: Record<string,string>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    socketQuery: Record<string,any>;
     paramKey: "channelId" | "conversationId";
     paramValue: string;
     type: "channel" | "conversation"
@@ -127,10 +128,12 @@ export const ChatMessages = ({
                                 content={message.content}
                                 fileUrl={message.fileUrl}
                                 deleted = {message.deleted}
-                                timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
+                                timestamp={format(new Date(message?.createdAt), DATE_FORMAT)}
                                 isUpdated = {message.updatedAt !== message.createdAt}
                                 socketUrl={socketUrl}
                                 socketQuery={socketQuery}
+                                createdAt={message?.createdAt}
+                                updatedAt={message?.updatedAt}
                             />
                         ))}
                     </Fragment>
