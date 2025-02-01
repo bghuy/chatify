@@ -8,8 +8,6 @@ import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash} from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import axios from "axios"
-import qs from "query-string"
 import {useForm} from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem } from "../ui/form";
@@ -17,6 +15,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useModal } from "../../../hooks/use-modal-store";
 import { useRouter, useParams } from "next/navigation";
+import { useMessageEmitter } from "../../../hooks/use-message-emitter";
 interface ChatItemProps {
     id: string;
     content: string;
@@ -30,6 +29,8 @@ interface ChatItemProps {
     isUpdated: boolean;
     socketUrl: string;
     socketQuery: Record<string,string>;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;  
 }
 
 const roleIconMap = {
@@ -54,12 +55,16 @@ export const ChatItem = ({
     isUpdated,
     socketUrl,
     socketQuery,
+    createdAt,
+    updatedAt
 }: ChatItemProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const {onOpen} = useModal();
     const params = useParams();
     const router = useRouter();
-
+    const {emitUpdateMessage} = useMessageEmitter({
+        queryKey: 'update_message'
+    });
     const onMemberClick = () => {
         if(member.id ===  currentMember.id) {
             return;
@@ -77,11 +82,19 @@ export const ChatItem = ({
 
     const submitForm = async(values: z.infer<typeof formSchema>) => {
         try {
-            const url = qs.stringifyUrl({
-                url: `${socketUrl}/${id}`,
-                query: socketQuery,
+            // const url = qs.stringifyUrl({
+            //     url: `${socketUrl}/${id}`,
+            //     query: socketQuery,
+            // })
+            // await axios.patch(url,values);
+            emitUpdateMessage({
+                id,
+                content: values.content,
+                createdAt,
+                updatedAt,
+                deleted: false,
+                ...socketQuery
             })
-            await axios.patch(url,values);
             form.reset();
             setIsEditing(false);
         } catch (error) {
@@ -254,7 +267,12 @@ export const ChatItem = ({
                         <Trash
                             onClick={()=>onOpen("DeleteMessage",{
                                 apiUrl: `${socketUrl}/${id}`,
-                                query: socketQuery
+                                query: socketQuery,
+                                metadata: {
+                                    id,
+                                    createdAt,
+                                    updatedAt
+                                }
                             })}
                             className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-300 transition"
                         />

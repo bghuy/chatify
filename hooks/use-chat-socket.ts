@@ -29,6 +29,8 @@ export const useChatSocket = ({
             return;
         }
         socket.on(updateKey,(message: MessageWithMemberWithUser)=>{    
+            console.log(message,"message");
+            
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             queryClient.setQueryData([queryKey],(oldData: any)=>{
                 if(!oldData || !oldData.pages || oldData.pages.length === 0){
