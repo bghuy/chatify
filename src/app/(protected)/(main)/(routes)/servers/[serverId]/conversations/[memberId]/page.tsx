@@ -33,56 +33,56 @@ const MemberIdPage = async({
     
     if(!currentMember) return redirect("/");
 
-    // const conversation = await getOrCreateConversation(currentMember.id,params.memberId);
-    // if(!conversation) return redirect(`servers/${params.serverId}`);
+    const conversation = await getOrCreateConversation(currentMember.id,params.memberId);
+    // console.log(conversation,"conversation");
+    
+    if(!conversation) return redirect(`servers/${params.serverId}`);
 
-    // const {memberOne, memberTwo} = conversation;
-    // const otherMember = memberOne.userId === user.id? memberTwo: memberOne;
-
+    const {memberOne, memberTwo} = conversation;
+    const otherMember = memberOne.userId === user.id? memberTwo: memberOne;
     return (
-        // <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
-        //     <ChatHeader
-        //         imageUrl={otherMember.user.image}
-        //         name={otherMember.user.name}
-        //         serverId={params.serverId}
-        //         type="conversation"
-        //     />
-        //     {searchParams.video && (
-        //         <MediaRoom
-        //             chatId= {conversation.id}
-        //             audio = {true}
-        //             video = {true}
-        //             user = {user}
-        //         />
-        //     )}
-        //     {!searchParams.video && (
-        //         <>
-        //             <ChatMessages
-        //                 member={currentMember}
-        //                 name={otherMember.user.name as string}
-        //                 chatId={conversation.id}
-        //                 type="conversation"
-        //                 apiUrl="/api/direct-messages"
-        //                 paramKey="conversationId"
-        //                 paramValue={conversation.id}
-        //                 socketUrl="/api/socket/direct-messages"
-        //                 socketQuery={{
-        //                     conversationId: conversation.id
-        //                 }}
-        //             />
-        //             <ChatInput
-        //                 name={otherMember.user.name as string}
-        //                 type="conversation"
-        //                 apiUrl="/api/socket/direct-messages"
-        //                 query={{
-        //                     conversationId: conversation.id
-        //                 }}
-        //             />
-        //         </>
-        //     )}
+        <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
+            <ChatHeader
+                imageUrl={otherMember.user.image}
+                name={otherMember.user.name}
+                serverId={params.serverId}
+                type="conversation"
+            />
+            {searchParams.video && (
+                <MediaRoom
+                    chatId= {conversation.id}
+                    audio = {true}
+                    video = {true}
+                    user = {user}
+                />
+            )}
+            {!searchParams.video && (
+                <>
+                    <ChatMessages
+                        member={currentMember}
+                        name={otherMember.user.name as string}
+                        chatId={conversation.id}
+                        type="conversation"
+                        apiUrl="/api/direct-messages"
+                        paramKey="conversationId"
+                        paramValue={conversation.id}
+                        socketUrl="/api/socket/direct-messages"
+                        socketQuery={{
+                            conversationId: conversation.id
+                        }}
+                    />
+                    <ChatInput
+                        name={otherMember.user.name as string}
+                        type="conversation"
+                        apiUrl="/api/socket/direct-messages"
+                        query={{
+                            conversationId: conversation.id
+                        }}
+                    />
+                </>
+            )}
 
-        // </div>
-        <div></div>
+        </div>
     );
 }
  
