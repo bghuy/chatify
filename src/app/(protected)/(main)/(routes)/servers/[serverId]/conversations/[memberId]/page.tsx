@@ -4,8 +4,6 @@ import { ChatInput } from "@/components/chat/chat-input";
 import { ChatMessages } from "@/components/chat/chat-messages";
 import { MediaRoom } from "@/components/media-room";
 import { getOrCreateConversation } from "@/lib/conversation";
-import { currentUser } from "@/lib/current-user";
-import { db } from "@/lib/db";
 import { getUserProfile } from "@/services/auth";
 import { getCurrentMemberInServer } from "@/services/member";
 import { redirect } from "next/navigation";
