@@ -17,7 +17,7 @@ import { Button } from "../ui/button"
 import { FormError } from "../form-error"
 import { FormSuccess } from "../form-success"
 import { useState, useTransition } from "react"
-import { register } from "../../../actions/register"
+import { LocalRegister } from "@/actions/auth/register"
 
 export const RegisterForm = () =>{
     const [isPending,startTransition] = useTransition();
@@ -36,11 +36,12 @@ export const RegisterForm = () =>{
         setSuccess(undefined);
         startTransition(async () => {
             try {
-                const data = await register(values);
-                if (data.error) {
-                    setError(data.error);
+                const {email, password, name} = values;
+                const data = await LocalRegister(email, password, name);
+                if (data?.user) {
+                    setSuccess("Register success, please login!");
                 } else {
-                    setSuccess(data.success);
+                    setError("Register failed, please try again!");
                 }
             } catch (err) {
                 setError("Something went wrong!");
