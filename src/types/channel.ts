@@ -23,3 +23,8 @@ export type Channel = {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type CreateChannelType = {
+  name: string;
+  type: ChannelType;
+}

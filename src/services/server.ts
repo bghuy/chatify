@@ -122,3 +122,12 @@ export const deleteMemberInServer = async (serverId: string, memberId: string) =
         throw error
     }
 }
+
+export const leaveServer = async (serverId: string) => {
+    try {
+        const res = await axiosInstance.patch(`/server/${serverId}/leave`)
+        return res.data
+    } catch (error) {
+        throw error
+    }
+}

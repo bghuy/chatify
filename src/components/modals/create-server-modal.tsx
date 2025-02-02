@@ -36,8 +36,9 @@ export const CreateServerModal = () =>{
     const isLoading = form.formState.isSubmitting;
     const submitForm = async (values: z.infer<typeof formSchema>) =>{
         try {
-            const res = await createNewServer({name: values.name, image: values.imageUrl});
-            console.log(res?.server);
+            console.log(values,"values");
+            
+            await createNewServer({name: values.name, image: values.imageUrl});
             router.refresh();
             handleClose()
             // window.location.reload();
