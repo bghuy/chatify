@@ -134,6 +134,7 @@ export const ChatMessages = ({
                                 socketQuery={socketQuery}
                                 createdAt={message?.createdAt}
                                 updatedAt={message?.updatedAt}
+                                type = {type}
                             />
                         ))}
                     </Fragment>
