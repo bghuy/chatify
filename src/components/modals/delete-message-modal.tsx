@@ -12,7 +12,7 @@ export const DeleteMessageModal = () =>{
     const {query, metadata} = data;
     const [isLoading, setIsLoading] = useState(false);
     const {emitUpdateMessage} = useMessageEmitter({
-        queryKey: 'update_message'
+        queryKey: metadata?.type === "channel" ? 'update_message' : 'update_direct_message'
     });
     const handleClick = async ()=>{
         try {

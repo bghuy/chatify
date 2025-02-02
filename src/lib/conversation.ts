@@ -1,6 +1,6 @@
 
-import { db } from "./db"
-
+import axiosInstance from "@/setup/axios";
+import qs from "query-string"
 export const getOrCreateConversation = async (memberOneId: string, memberTwoId: string) =>{
     let conversation = await findConversation(memberOneId, memberTwoId) || await findConversation(memberTwoId,memberOneId);
     
@@ -13,52 +13,27 @@ export const getOrCreateConversation = async (memberOneId: string, memberTwoId: 
 
 const findConversation = async (memberOneId: string, memberTwoId: string)=>{
     try {
-        return await db.conversation.findFirst({
-            where: {
-                AND: [
-                    {memberOneId: memberOneId},
-                    {memberTwoId: memberTwoId}
-                ]
-            },
-            include: {
-                memberOne: {
-                    include: {
-                        user: true
-                    }
-                },
-                memberTwo: {
-                    include: {
-                        user: true
-                    }
-                }
+        const url = qs.stringifyUrl({
+            url: "/conversation",
+            query: {
+                memberOneId,
+                memberTwoId
             }
-        })  
+        })
+        const res = await axiosInstance.get(url);
+        return res?.data?.conversation;
     } catch (error) {
         return null
     }
-    
 }
 
 const createNewConversation = async (memberOneId: string, memberTwoId: string) =>{
     try {
-        return await db.conversation.create({
-            data: {
-                memberOneId,
-                memberTwoId
-            },
-            include: {
-                memberOne: {
-                    include: {
-                        user: true
-                    }
-                },
-                memberTwo: {
-                    include: {
-                        user: true
-                    }
-                }
-            }
+        const res = await axiosInstance.post("/conversation",{
+            memberOneId,
+            memberTwoId
         })
+        return res?.data?.conversation;
     } catch (error) {
         return null;
     }
