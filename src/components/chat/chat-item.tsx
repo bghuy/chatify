@@ -30,7 +30,8 @@ interface ChatItemProps {
     socketUrl: string;
     socketQuery: Record<string,string>;
     createdAt?: Date | string;
-    updatedAt?: Date | string;  
+    updatedAt?: Date | string;
+    type: "channel" | "conversation";
 }
 
 const roleIconMap = {
@@ -56,14 +57,15 @@ export const ChatItem = ({
     socketUrl,
     socketQuery,
     createdAt,
-    updatedAt
+    updatedAt,
+    type
 }: ChatItemProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const {onOpen} = useModal();
     const params = useParams();
     const router = useRouter();
     const {emitUpdateMessage} = useMessageEmitter({
-        queryKey: 'update_message'
+        queryKey: type === 'channel' ? 'update_message' : 'update_direct_message'
     });
     const onMemberClick = () => {
         if(member.id ===  currentMember.id) {
@@ -271,7 +273,8 @@ export const ChatItem = ({
                                 metadata: {
                                     id,
                                     createdAt,
-                                    updatedAt
+                                    updatedAt,
+                                    type
                                 }
                             })}
                             className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-300 transition"
