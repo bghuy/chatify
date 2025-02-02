@@ -6,10 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem } from "../ui/form"
 import { Button } from "../ui/button"
 import { FileUpload } from "../file-upload"
-import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useModal } from "../../../hooks/use-modal-store"
-import qs from "query-string"
+import { useMessageEmitter } from "../../../hooks/use-message-emitter"
 const formSchema = z.object({
     fileUrl: z.string().min(1,{
         message: "Attachment is required"
@@ -20,7 +19,7 @@ export const MessageFileModal = () =>{
     const {isOpen,onClose, type, data} = useModal();
     const router = useRouter()
     const isModalOpen = isOpen && type === "MessageFile";
-    const {apiUrl, query } = data;
+    const {query, metadata } = data;
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues:{
@@ -33,17 +32,26 @@ export const MessageFileModal = () =>{
         onClose();
     }
     const isLoading = form.formState.isSubmitting;
+    const {emitMessage} = useMessageEmitter({
+            queryKey: metadata?.type === 'channel' ? 'new_message': 'new_direct_message',
+        });
     const submitForm = async (values: z.infer<typeof formSchema>) =>{
         try {
-            const url = qs.stringifyUrl({
-                url: apiUrl || "",
-                query,
+            // const url = qs.stringifyUrl({
+            //     url: apiUrl || "",
+            //     query,
+            // })
+            // const message = await axios.post(url,{
+            //     ...values,
+            //     content: values.fileUrl
+            // })
+            emitMessage({
+                content: '',
+                fileUrl: values?.fileUrl,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                ...query
             })
-            const message = await axios.post(url,{
-                ...values,
-                content: values.fileUrl
-            })
-            console.log(message);
             router.refresh();
             handleCloseModal();
         } catch (error) {
