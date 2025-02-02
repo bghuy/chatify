@@ -4,8 +4,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useModal } from "../../../hooks/use-modal-store"
 import { Button } from "../ui/button";
 import { useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
+import { leaveServer } from "@/services/server";
 
 export const LeaveServerModal = () =>{
     const {isOpen, onClose , type, data} = useModal();
@@ -13,19 +13,19 @@ export const LeaveServerModal = () =>{
     const isModalOpen = isOpen === true && type === "LeaveServer";
     const {server} = data;
     const [isLoading, setIsLoading] = useState(false);
-    const handleClick = async ()=>{
+    const handleClick = async () => {
         try {
             setIsLoading(true);
-            const response = await axios.patch(`/api/servers/${server?.id}/leave`);
-            console.log(response,"response");
-            router.refresh();
-            onClose();
-            router.push("/")
+            if (server?.id) {
+                await leaveServer(server.id);
+                router.refresh();
+                onClose();
+                router.push("/");
+            }
         } catch (error) {
             console.log(error);
-            
-        } finally{
-            setIsLoading(false)
+        } finally {
+            setIsLoading(false);
         }
     }
     return( 

@@ -2,13 +2,16 @@
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { Button } from "../ui/button";
-import { signIn } from "next-auth/react";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+
+import { SocialLogin } from "@/actions/auth/login";
 export const Social = () =>{
     const signInOauth = async(provider: "google" | "github") => {
-        await signIn(provider,{
-            callbackUrl: DEFAULT_LOGIN_REDIRECT
-        })
+        try {
+            await SocialLogin(provider);
+        } catch (error) {
+            console.log(error);
+        }
+
     }
     return(
         <div className="flex items-center w-full gap-x-2">

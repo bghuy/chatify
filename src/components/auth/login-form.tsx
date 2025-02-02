@@ -47,11 +47,11 @@ export const LoginForm = () => {
                 }
                 const decoded = jwt.decode(access_token);
                 const {exp} = decoded as {exp: number};
-                const expirationTime = exp ? new Date(exp * 1000) : Math.floor(Date.now() / 1000) + 3600;
+                const expirationTime = new Date(exp * 1000);
                 Cookies.set('access_token', access_token, { expires: expirationTime });
-                // Cookies.set('access_token', access_token, { expires: 7 });
                 setSuccess('Login successfully!');
-                router.push("/test");
+                router.push("/setup");
+                router.refresh();
             } catch (error) {
                 setError("Login failed!");
             }
