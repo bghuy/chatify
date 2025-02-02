@@ -6,13 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import axios from "axios"
 import { useParams, useRouter } from "next/navigation"
 import { useModal } from "../../../hooks/use-modal-store"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
-import qs from "query-string"
 import { useEffect } from "react"
 import { ChannelType} from "@/types/channel"
+import { createChannel } from "@/services/channel"
 const formSchema = z.object({
     name: z.string().min(1,{
         message: "Channel name is required"
@@ -49,21 +48,19 @@ export const CreateChannelModal = () =>{
     },[channelType,form])
 
     const isLoading = form.formState.isSubmitting;
-    const submitForm = async (values: z.infer<typeof formSchema>) =>{
+    const submitForm = async (values: z.infer<typeof formSchema>) => {
         try {
-            const url = qs.stringifyUrl({
-                url: "/api/channels",
-                query: {
-                    serverId: params?.serverId
-                }
-            })
-            const server = await axios.post(url,values)
-            console.log(server,"server");
-            router.refresh();
-            handleClose()
-            // window.location.reload();
+            if (params?.serverId) {
+                const resServer = await createChannel(params.serverId as string, values);
+                console.log(resServer?.server, "server");
+                router.refresh();
+                handleClose();
+                // window.location.reload();
+            } else {
+                throw new Error("Invalid serverId");
+            }
         } catch (error) {
-            console.log(error,"error")
+            console.log(error, "error");
         }
     }
     

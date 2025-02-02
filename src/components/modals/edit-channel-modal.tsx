@@ -6,13 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useModal } from "../../../hooks/use-modal-store"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
-import qs from "query-string"
 import { useEffect } from "react"
 import { ChannelType } from "@/types/channel"
+import { updateChannel } from "@/services/channel"
 
 
 const formSchema = z.object({
@@ -49,21 +48,17 @@ export const EditChannelModal = () =>{
     },[form,channel])
 
     const isLoading = form.formState.isSubmitting;
-    const submitForm = async (values: z.infer<typeof formSchema>) =>{
+    const submitForm = async (values: z.infer<typeof formSchema>) => {
         try {
-            const url = qs.stringifyUrl({
-                url: `/api/channels/${channel?.id}`,
-                query: {
-                    serverId: server?.id
-                }
-            })
-            const response = await axios.patch(url,values)
-            console.log(response,"server");
-            router.refresh();
-            handleClose()
-            // window.location.reload();
+            if (server?.id && channel?.id) {
+                const response = await updateChannel(server.id, channel.id, values);
+                console.log(response?.server, "server");
+                router.refresh();
+                handleClose();
+                // window.location.reload();
+            }
         } catch (error) {
-            console.log(error,"error")
+            console.log(error, "error");
         }
     }
     

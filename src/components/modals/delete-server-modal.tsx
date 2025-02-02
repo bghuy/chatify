@@ -17,11 +17,11 @@ export const DeleteServerModal = () =>{
         try {
             setIsLoading(true);
             if(server?.id){
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const response = await deleteServer(server.id);
-                console.log(response,"response");
-                router.refresh();
                 onClose();
                 router.push("/setup")
+                router.refresh();
             }
 
         } catch (error) {

@@ -51,7 +51,7 @@ export const LoginForm = () => {
                 Cookies.set('access_token', access_token, { expires: expirationTime });
                 // Cookies.set('access_token', access_token, { expires: 7 });
                 setSuccess('Login successfully!');
-                router.push("/test");
+                router.push("/setup");
             } catch (error) {
                 setError("Login failed!");
             }
