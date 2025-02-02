@@ -28,6 +28,7 @@ export const Social = () =>{
                 className="w-full"
                 variant="outline"
                 onClick={()=>{signInOauth('github')}}
+                disabled
             >
                 <FaGithub className="h-5 w-5"/>
             </Button>
