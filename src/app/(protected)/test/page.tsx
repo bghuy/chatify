@@ -12,7 +12,7 @@ export default function TestPage () {
             },
             credentials: 'include',
         });
-        console.log(response, "response");
+        // console.log(response, "response");
         const data = await response.json();
         console.log(data, "data");
 
