@@ -88,7 +88,7 @@ export const ChatMessages = ({
             >
                 <ServerCrash className="h-7 w-7 text-zinc-500 my-4"/>
                 <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                    Something went wrong!
+                    Something went wrong!, please reload
                 </p>
             </div>
         )
