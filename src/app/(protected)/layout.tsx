@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 import { checkValidAccessToken, getNewAccessToken } from "@/utils/auth";
 import jwt from 'jsonwebtoken';
 import Cookies from 'js-cookie'
+import ChatifyLoader from "@/components/auth/ChatifyLoader";
 
 const ProtectedLayout = ({children}:{children: React.ReactNode}) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -44,7 +45,11 @@ const ProtectedLayout = ({children}:{children: React.ReactNode}) => {
         checkAuth()
     }, [router])
     if (isLoading) {
-    return <div>Loading...</div>
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-[#36393f]">
+                <ChatifyLoader/>
+            </div>
+        )     
     }
     if(isAuthenticated) {
         return ( 

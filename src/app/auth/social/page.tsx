@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import jwt from 'jsonwebtoken';
 import { getUserProfile } from "@/services/auth";
 import { signOutUser } from "@/actions/auth/signOut";
+import ChatifyLoader from "@/components/auth/ChatifyLoader";
 
 const SocialLoginComponent = () => {
     const router = useRouter();
@@ -47,7 +48,11 @@ const SocialLoginComponent = () => {
     return null;
 };
 const SocialLoginPage = () => (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={            
+        <div className="flex items-center justify-center min-h-screen bg-[#36393f]">
+            <ChatifyLoader/>
+        </div>
+    }>
         <SocialLoginComponent />
     </Suspense>
 );
